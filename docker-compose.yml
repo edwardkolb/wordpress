@@ -4,7 +4,7 @@ services:
     nginx:
         image: nginx:latest
         ports:
-            - '88:80'
+            - '81:80'
         volumes:
             - ./nginx:/etc/nginx/conf.d
             - ./logs/nginx:/var/log/nginx
@@ -15,7 +15,7 @@ services:
     mysql:
         image: mariadb
         ports:
-            - '3306:3306'
+            - '3301:3306'
         volumes:
             - ./db-data:/var/lib/mysql
         environment:
@@ -25,7 +25,7 @@ services:
     wordpress:
         image: wordpress:5.7.0-php8.0-fpm
         ports:
-            - '9000:9000'
+            - '9001:9000'
         volumes:
             - ./wordpress:/var/www/html
         environment:
