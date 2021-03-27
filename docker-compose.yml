@@ -37,6 +37,7 @@ services:
             - mysql
         restart: always
     
-    volumes:
-        wordpress:
+    
+volumes:
+    wordpress:
 
