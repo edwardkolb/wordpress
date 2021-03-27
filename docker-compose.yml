@@ -12,7 +12,7 @@ services:
         links:
             - wordpress
         restart: always
-    mysql2:
+    mysql:
         image: mariadb
         ports:
             - '3301:3306'
