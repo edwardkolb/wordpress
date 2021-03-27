@@ -40,4 +40,9 @@ services:
     
 volumes:
     wordpress:
+    nginx:
+    logs:
+    
+app-network:
+    driver: bridge
 
