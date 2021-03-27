@@ -22,7 +22,7 @@ services:
             - MYSQL_ROOT_PASSWORD=aqwe123
         restart: always
 
-    wordpress2:
+    wordpress:
         image: wordpress:4.7.1-php7.0-fpm
         ports:
             - '9001:9000'
