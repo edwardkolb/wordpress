@@ -1,0 +1,94 @@
+---
+- hosts: all
+  become: True
+  gather_facts: false
+
+  tasks:
+    - name: UPGRADE PACKAGES
+      apt: upgrade=dist update_cache=yes cache_valid_time=3600
+
+    - name: INSTALL BASE PACKAGES
+      apt: 
+        name:
+          - sudo
+          - git
+          - python
+          - python3
+          - python-pip
+          - python3-pip
+          - default-jre
+        state: present
+        autoclean: yes
+
+    - name: INSTALL DOCKER PACKAGES
+      remote_user: vagrant
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+      tags:
+        - docker
+
+    - name: ADD DOCKER IS OFFICIAL GPG KEY
+      remote_user: vagrant
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      tags:
+        - docker
+
+    - name: VERIFY THAT WE HAVE THE KEY WITH FINGERPRINT
+      remote_user: vagrant
+      apt_key:
+        id: 0EBFCD88
+        state: present
+      tags:
+        - docker
+
+    - name: SET UP THE STABLE REPOSITORY
+      remote_user: vagrant
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+        state: present
+        update_cache: yes
+      tags:
+        - docker
+    
+    - name: UPDATE APT PACKEGES
+      remote_user: vagrant
+      apt:
+        update_cache: yes
+      tags:
+        - docker
+    
+    - name: INSTALL DOCKER
+      remote_user: vagrant
+      apt:
+        name: docker-ce
+        state: present
+        update_cache: yes
+      #notify: Start docker on boot
+      tags:
+        - docker
+
+#ДОБАВИТЬ ПОЛЬЗ jenkins
+    - name: ADD REMOTE "vagrant" USER TO "docker" GROUP
+      remote_user: vagrant
+      user:
+        name: "vagrant"
+        group: "docker"
+        append: yes
+      tags:
+        - docker
+
+    - name: INSTALL DOCKER-COMPOSE
+      remote_user: vagrant
+      get_url: 
+        url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
